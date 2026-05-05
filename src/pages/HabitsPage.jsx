@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import api from "../services/habits-service"
-import HabitForm from "./HabitForm"
+import HabitForm from "../components/HabitForm"
+import { Link } from "react-router-dom"
 
 
 
@@ -29,7 +30,7 @@ function HabitsPage() {
     <div>
       {habits.map((habit) => (
        <div key={habit.id}>
-        <p >{habit.name}</p>
+        <Link to={"/habits/"+ habit.id}>{habit.name}</Link>
         <button onClick={() => handleDelete(habit.id)}>Delete</button>
         </div>
     ))} 
