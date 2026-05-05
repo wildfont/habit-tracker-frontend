@@ -10,19 +10,31 @@ function HabitsPage() {
   const [showNewHabit, setShowNewHabit] = useState(false);
   const [searchCategory, setSearchCategory] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   function fetchHabits() {
     setLoading(true);
-    api.get("/habits").then((response) => {
-      setHabits(response.data);
-      setLoading(false);
-    });
+    api
+      .get("/habits")
+      .then((response) => {
+        setHabits(response.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+        setError("Something went wrong");
+      });
   }
 
   function handleDelete(id) {
-    api.delete("/habits/" + id).then(() => {
-      fetchHabits();
-    });
+    api
+      .delete("/habits/" + id)
+      .then(() => {
+        fetchHabits();
+      })
+      .catch(() => {
+        setError("Something went wrong");
+      });
   }
 
   useEffect(() => {
@@ -50,7 +62,7 @@ function HabitsPage() {
         <option value="Wellness">Wellness</option>
         <option value="Personal">Personal</option>
       </select>
-
+      {error && <h1>{error}</h1>}
       {loading ? (
         <RingLoader />
       ) : (

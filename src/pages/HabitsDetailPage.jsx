@@ -6,16 +6,21 @@ import HabitEditForm from "../components/HabitEditForm";
 function HabitsDetailPage() {
   const { id } = useParams();
   const [habitDetails, setHabitDetails] = useState(null);
-  const [showEditForm, setShowEditForm] = useState(false)
-  useEffect(() => {
-    api.get("/habits/" + id).then((response) => setHabitDetails(response.data));
-  }, []);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [error, setError] = useState(null);
 
-  console.log(id);
+  useEffect(() => {
+    api
+      .get("/habits/" + id)
+      .then((response) => setHabitDetails(response.data))
+      .catch(() => {
+        setError("Something went wrong");
+      });
+  }, []);
   return (
     <div>
-      {habitDetails && (          
-        
+      {error && <p>{error}</p>}
+      {habitDetails && (
         <div>
           <h2>{habitDetails.name}</h2>
           <p>{habitDetails.description}</p>
@@ -23,8 +28,16 @@ function HabitsDetailPage() {
           <h6>{habitDetails.frequency}</h6>
           <h6>{habitDetails.goal}</h6>
           <h6>{habitDetails.icon}</h6>
-          <button onClick={() => setShowEditForm((!showEditForm))}>{showEditForm ? "Cancel" : "Modify"}</button>
-          {showEditForm && <HabitEditForm habitDetails={habitDetails} setHabitDetails={setHabitDetails} id={id} />}
+          <button onClick={() => setShowEditForm(!showEditForm)}>
+            {showEditForm ? "Cancel" : "Modify"}
+          </button>
+          {showEditForm && (
+            <HabitEditForm
+              habitDetails={habitDetails}
+              setHabitDetails={setHabitDetails}
+              id={id}
+            />
+          )}
         </div>
       )}
     </div>
